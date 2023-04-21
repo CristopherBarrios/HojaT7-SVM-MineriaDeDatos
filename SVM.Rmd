@@ -1,0 +1,31 @@
+---
+title: "SVM"
+author: "Cristopher Barrios, Carlos Daniel Estrada"
+date: "2023-04-21"
+output:
+  pdf_document: default
+  html_document: default
+---
+1. Use los mismos conjuntos de entrenamiento y prueba de las hojas de trabajo pasadas para probar el algoritmo.
+
+2. Explore los datos y explique las transformaciones que debe hacerle para generar un modelo de máquinas vectoriales de soporte.
+
+3. Use como variable respuesta la variable categórica que especifica si la casa es barata, media o cara
+
+4. Genere varios (más de 2) modelos de SVM con diferentes kernels y distintos valores en los parámetros c, gamma (circular) y d (en caso de que utilice el polinomial). Puede tunear el modelo de forma automática siempre que explique los resultados
+
+5. Use los modelos para predecir el valor de la variable respuesta
+
+6. Haga las matrices de confusión respectivas.
+
+7. Analice si los modelos están sobreajustados o desajustados. ¿Qué puede hacer para manejar el sobreajuste o desajuste?
+
+8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores).
+
+9. Compare la eficiencia del mejor modelo de SVM con los resultados obtenidos en los algoritmos de las hojas de trabajo anteriores que usen la misma variable respuesta (árbol de decisión y random forest, naive bayes). ¿Cuál es mejor para predecir? ¿Cuál se demoró más en procesar?
+
+10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
+
+11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
+
+12. Genere un informe de los resultados y las explicaciones.
