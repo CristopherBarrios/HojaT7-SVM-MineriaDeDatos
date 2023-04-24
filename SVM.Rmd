@@ -3,26 +3,308 @@ title: "SVM"
 author: "Cristopher Barrios, Carlos Daniel Estrada"
 date: "2023-04-21"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
+```{r message=FALSE, warning=FALSE}
+library(e1071)
+library(caret)
+library(corrplot)
+library(labelled)
+library(plotly)
+library(ggplot2)
+```
+
+
 1. Use los mismos conjuntos de entrenamiento y prueba de las hojas de trabajo pasadas para probar el algoritmo.
+```{r}
+set.seed(123)
+train = read.csv("./train.csv")
+```
+
 
 2. Explore los datos y explique las transformaciones que debe hacerle para generar un modelo de máquinas vectoriales de soporte.
+```{r  message=FALSE, warning=FALSE}
 
+train[is.na(train)] <- 0
+train$tipoDeCasa = as.numeric(as.character( cut(train$SalePrice,c(0,145000,205000,410000), labels = c(1, 2, 3))))
+train[sapply(train, is.character)] <- lapply(train[sapply(train, is.character)],as.factor)
+
+#columnas con NA
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+train <- completeFun(train, "tipoDeCasa") #variable respuesta, variable categorica 
+str(train)
+```
 3. Use como variable respuesta la variable categórica que especifica si la casa es barata, media o cara
+```{r}
+train <- completeFun(train, "tipoDeCasa") #variable respuesta, variable categorica 
 
-4. Genere varios (más de 2) modelos de SVM con diferentes kernels y distintos valores en los parámetros c, gamma (circular) y d (en caso de que utilice el polinomial). Puede tunear el modelo de forma automática siempre que explique los resultados
+#datos con factor 
+frstselect <- train[,c(2:5,8,9,11:43,46,49:54,56:62,64:72,76:80,82)]
+
+#datos cuantitativos
+scndselect <- subset (train, select = c(2,4,5,18,19,20,21,27,35,37,38,39,44,45,46,47,48,49,50,51,52,53,55,57,60,62,63,67,68,69,70,71,72,76,77,78,82))
+scndselect[is.na(scndselect)] <- 0
+```
+
+
+4. Genere varios (más de 2) modelos de SVM con diferentes kernels y distintos valores en los parámetros c, gamma (circular) y d (en caso de que utilice el polinomial). Puede tunear el modelo de forma automática siempre que explique los resultados.
+
+```{r  message=FALSE, warning=FALSE}
+
+M <- cor(scndselect[,c(1:18)])
+M1<- cor(scndselect[,c(19:37)])
+M2<- cor(scndselect[,c(1:18)],scndselect[,c(19:37)])
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+```
+
+```{r}
+corrplot(M,  method = "color", col = col(200), order = "hclust", number.cex = .5,
+         addCoef.col = "black",
+         tl.col = "black",
+         sig.level = 0.50, insig = "blank", 
+         diag = FALSE)
+```
+
+```{r}
+corrplot(M1,  method = "color", col = col(200), order = "hclust", number.cex = .5,
+         addCoef.col = "black",
+         tl.col = "black",
+         sig.level = 0.50, insig = "blank", 
+         diag = FALSE)
+```
+
+```{r message=FALSE, warning=FALSE}
+corrplot(M2,  method = "color", col = col(200), order = "hclust", number.cex = .5,
+         addCoef.col = "black",
+         tl.col = "black",
+         sig.level = 0.50, insig = "blank", 
+         diag = TRUE)
+```
+
+```{r}
+tipocor<- cor(scndselect[,-1],scndselect$tipoDeCasa)
+tipocor
+```
+
+```{r}
+porciento <- 70/100
+
+#todo tipo de variables 
+trainRowsNumber<-sample(1:nrow(frstselect),porciento*nrow(frstselect))
+train<-frstselect[trainRowsNumber,]
+test<-frstselect[-trainRowsNumber,]
+
+#variables cuantitativas
+trainRowsNum<-sample(1:nrow(scndselect),porciento*nrow(scndselect))
+train1<-scndselect[trainRowsNum,]
+test1<-scndselect[-trainRowsNum,]
+
+#Modelos
+modeloSVM_L1<-svm(tipoDeCasa~., data=train,type="C-classification", cost=2^5, kernel="linear") 
+modeloSVM_L2<-svm(tipoDeCasa~., data=train,type="C-classification", cost=0.5, kernel="linear")
+modeloSVM_L3<-svm(tipoDeCasa~., data=train,type="C-classification", cost=2^-5, kernel="linear")
+
+
+modeloSVM_R1<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=0.005,kernel="radial")
+modeloSVM_R2<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=0.05,kernel="radial")
+modeloSVM_R3<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=2^-5,kernel="radial")
+
+
+modeloSVM_P1<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=1, kernel="polynomial", coef0=1, degree= 8) 
+modeloSVM_P2<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=5, kernel="polynomial", coef0=1)
+modeloSVM_P3<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=2^-5, kernel="polynomial", coef0=1)
+```
+
+```{r}
+summary(modeloSVM_L1)
+```
+
+```{r}
+summary(modeloSVM_R1)
+```
+
+```{r}
+summary(modeloSVM_P1)
+```
+
 
 5. Use los modelos para predecir el valor de la variable respuesta
+```{r}
+# Linear
+process_timeL1 <- proc.time()
+prediccionL1<-predict(modeloSVM_L1,newdata=test[,1:67])
+process_timeL1 <- proc.time() - process_timeL1
+process_timeL2 <- proc.time()
+prediccionL2<-predict(modeloSVM_L2,newdata=test[,1:67])
+process_timeL2 <- proc.time() - process_timeL2
+process_timeL3 <- proc.time()
+prediccionL3<-predict(modeloSVM_L3,newdata=test[,1:67])
+process_timeL3 <- proc.time() - process_timeL3
+process_timeL_avarage <- (process_timeL1[3] + process_timeL2[3] + process_timeL3[3])/3
+
+# Radial
+process_timeR1 <- proc.time()
+prediccionR1<-predict(modeloSVM_R1,newdata=test[,1:67])#[,1:37]
+process_timeR1 <- proc.time() - process_timeR1
+process_timeR2 <- proc.time()
+prediccionR2<-predict(modeloSVM_R2,newdata=test[,1:67])#[,1:37]
+process_timeR2 <- proc.time() - process_timeR2
+process_timeR3 <- proc.time()
+prediccionR3<-predict(modeloSVM_R3,newdata=test[,1:67])#[,1:37]
+process_timeR3 <- proc.time() - process_timeR3
+process_timeR_avarage <- (process_timeR1[3] + process_timeR2[3] + process_timeR3[3])/3
+
+# Polinomial
+process_timeP1 <- proc.time()
+prediccionP1<-predict(modeloSVM_P1,newdata=test[,1:67])
+process_timeP1 <- proc.time() - process_timeP1
+process_timeP2 <- proc.time()
+prediccionP2<-predict(modeloSVM_P2,newdata=test[,1:67])
+process_timeP2 <- proc.time() - process_timeP2
+process_timeP3 <- proc.time()
+prediccionP3<-predict(modeloSVM_P3,newdata=test[,1:67])
+process_timeP3 <- proc.time() - process_timeP3
+process_timeP_avarage <- (process_timeP1[3] + process_timeP2[3] + process_timeP3[3])/3
+
+#Cambio de tipo de data a factors
+test$tipoDeCasa<- as.factor(test$tipoDeCasa)
+test1$tipoDeCasa<- as.factor(test$tipoDeCasa)
+```
 
 6. Haga las matrices de confusión respectivas.
+```{r}
+#linear
+cmL1<-confusionMatrix(test$tipoDeCasa,prediccionL1)
+cmL2<-confusionMatrix(test$tipoDeCasa,prediccionL2)
+cmL3<-confusionMatrix(test$tipoDeCasa,prediccionL3)
+```
+
+```{r}
+#linear
+cmL1
+```
+
+```{r}
+#linear
+cmL2
+```
+
+```{r}
+#linear
+cmL3
+```
+
+```{r}
+#radial
+cmR1<-confusionMatrix(test$tipoDeCasa,prediccionR1)
+cmR2<-confusionMatrix(test$tipoDeCasa,prediccionR2)
+cmR3<-confusionMatrix(test$tipoDeCasa,prediccionR3)
+```
+
+```{r}
+#radial
+cmR1
+```
+
+```{r}
+#radial
+cmR2
+```
+
+```{r}
+#radial
+cmR3
+```
+
+```{r}
+# Polinomial
+cmP1<-confusionMatrix(test$tipoDeCasa,prediccionP1)
+cmP2<-confusionMatrix(test$tipoDeCasa,prediccionP2)
+cmP3<-confusionMatrix(test$tipoDeCasa,prediccionP3)
+
+```
+
+```{r}
+# Polinomial
+cmP1
+```
+
+```{r}
+# Polinomial
+cmP2
+
+```
+
+```{r}
+# Polinomial
+cmP3
+```
+
+
+
+
+
 
 7. Analice si los modelos están sobreajustados o desajustados. ¿Qué puede hacer para manejar el sobreajuste o desajuste?
 
 8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores).
+```{r}
+#accuracy
+cmL1<-cmL1$overall[['Accuracy']]*100
+cmL2<-cmL2$overall[['Accuracy']]*100
+cmL3<-cmL3$overall[['Accuracy']]*100
+cmR1<-cmR1$overall[['Accuracy']]*100
+cmR2<-cmR2$overall[['Accuracy']]*100
+cmR3<-cmR3$overall[['Accuracy']]*100
+cmP1<-cmP1$overall[['Accuracy']]*100
+cmP2<-cmP2$overall[['Accuracy']]*100
+cmP3<-cmP3$overall[['Accuracy']]*100
+
+accuracycm1<- c(cmL1,cmR1,cmP1)
+accuracycm2<- c(cmL2,cmR2,cmP2)
+accuracycm3<- c(cmL3,cmR3,cmP3)
+
+tiposvmcm<- c("linear","radial","polinomial")
+
+accuracycm4<- c(cmL1,cmL2,cmL3)
+accuracycm5<- c(cmR1,cmR2,cmR3)
+accuracycm6<- c(cmP1,cmP2,cmP3)
+
+data <- data.frame(tiposvmcm, accuracycm1, accuracycm2, accuracycm3)
+```
+
+```{r}
+fig <- plot_ly(data, x = ~tiposvmcm, y = ~accuracycm1, type = 'bar',text = paste(signif(accuracycm1,digits = 3),"%"), textposition = 'auto', name = '')
+fig <- fig %>% add_trace(y = ~accuracycm2, name = '',text = paste(signif(accuracycm2,digits = 3),"%"), textposition = 'auto')
+fig <- fig %>% add_trace(y = ~accuracycm3, name = '',text = paste(signif(accuracycm3,digits = 3),"%"), textposition = 'auto')
+fig <- fig %>% layout(title="(Accuracy vs kernel type) of SVM",yaxis = list(title = 'Accuracy(%)'),xaxis = list(title = 'kernel'), barmode = 'group')
+fig
+```
+
 
 9. Compare la eficiencia del mejor modelo de SVM con los resultados obtenidos en los algoritmos de las hojas de trabajo anteriores que usen la misma variable respuesta (árbol de decisión y random forest, naive bayes). ¿Cuál es mejor para predecir? ¿Cuál se demoró más en procesar?
+```{r}
+modelos_aplicados <- c("Arbol de Clasificacion","Naive Bayes","Regresion Lineal", "SVM")
+accuracy_individual <- c(73.61, 76.69, 70.05, 83.99)
+comparacion_modelos <- data.frame(modelos_aplicados, accuracy_individual)
+fig_2 <- plot_ly(comparacion_modelos, x = ~modelos_aplicados, y = ~accuracy_individual, type = 'bar', text = paste(signif(accuracy_individual,digits = 3),"%"), textposition = 'auto', name = '')
+fig_2 <- fig_2 %>% layout(title="Accuracy vs Modelo Aplicado",yaxis = list(title = 'Accuracy(%)'),xaxis = list(title = 'Modelo Aplicado'), barmode = 'group')
+fig_2
+```
+
+```{r}
+modelos_SVM <- c("Lineal", "Radial", "Polinomial")
+elapsed <- c(process_timeL_avarage, process_timeR_avarage, process_timeP_avarage)
+comparacion_elapsed <- data.frame(modelos_SVM, elapsed)
+fig_3 <- plot_ly(comparacion_elapsed, x = ~modelos_SVM, y = ~elapsed, type = 'bar', text = paste(signif(elapsed,digits = 3),"s"), textposition = 'auto', name = '')
+fig_3<- fig_3 %>% layout(title="Tiempo de Ejecucion vs Modelo Aplicado",yaxis = list(title = 'Time(s)'),xaxis = list(title = 'Modelo Aplicado'), barmode = 'group')
+fig_3
+```
+
 
 10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
 
