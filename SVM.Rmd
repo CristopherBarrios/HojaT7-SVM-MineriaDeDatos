@@ -201,15 +201,21 @@ cmL3<-confusionMatrix(test$tipoDeCasa,prediccionL3)
 cmL1
 ```
 
+Muestra que de las 162 casas de tipo 1, 128 fueron correctamente clasificadas, mientras que 29 se clasificaron erróneamente como tipo 2 y 1 como tipo 3. De las 150 casas de tipo 2, 104 se clasificaron correctamente, mientras que 24 y 22 se clasificaron erróneamente como tipo 1 y tipo 3, respectivamente. De las 122 casas de tipo 3, 89 se clasificaron correctamente, mientras que 1 y 33 se clasificaron erróneamente como tipo 1 y tipo 2, respectivamente.
+
 ```{r}
 #linear
 cmL2
 ```
+Muestra que de las 162 casas de tipo 1, 140 fueron correctamente clasificadas, mientras que 18 se clasificaron erróneamente como tipo 2. De las 150 casas de tipo 2, 106 se clasificaron correctamente, mientras que 22 y 24 se clasificaron erróneamente como tipo 1 y tipo 3, respectivamente. De las 122 casas de tipo 3, 98 se clasificaron correctamente, mientras que 1 y 23 se clasificaron erróneamente como tipo 1 y tipo 2, respectivamente.
+
 
 ```{r}
 #linear
 cmL3
 ```
+
+Muestra que de las 162 casas de tipo 1, 147 fueron correctamente clasificadas, mientras que 11 se clasificaron erróneamente como tipo 2. De las 150 casas de tipo 2, 115 se clasificaron correctamente, mientras que 19 y 23 se clasificaron erróneamente como tipo 1 y tipo 3, respectivamente. De las 122 casas de tipo 3, 100 se clasificaron correctamente, mientras que ninguna se clasificó erróneamente como tipo 1 o tipo 2.
 
 ```{r}
 #radial
@@ -223,15 +229,20 @@ cmR3<-confusionMatrix(test$tipoDeCasa,prediccionR3)
 cmR1
 ```
 
+Este modelo tuvo una precisión general del 82,6%. Predijo correctamente la clase 1 en el 86,13% de los casos, la clase 2 en el 74,05% de los casos y la clase 3 en el 90% de los casos. También tuvo una sensibilidad y especificidad alta en todas las clases, lo que significa que el modelo pudo distinguir correctamente entre las diferentes clases.
+
 ```{r}
 #radial
 cmR2
 ```
 
+Tuvo una precisión general del 80,28%. Predijo correctamente la clase 1 en el 85,12% de los casos, la clase 2 en el 69,59% de los casos y la clase 3 en el 91,3% de los casos. También tuvo una alta sensibilidad en todas las clases, pero su especificidad fue menor en la clase 2, lo que indica que el modelo tuvo dificultades para distinguir entre la clase 2 y otras clases.
+
 ```{r}
 #radial
 cmR3
 ```
+Tuvo una precisión general del 83,29%. Predijo correctamente la clase 1 en el 88,41% de los casos, la clase 2 en el 73,49% de los casos y la clase 3 en el 91,09% de los casos. También tuvo una alta sensibilidad y especificidad en todas las clases, lo que indica que el modelo pudo distinguir correctamente entre las diferentes clases.
 
 ```{r}
 # Polinomial
@@ -256,6 +267,8 @@ cmP2
 # Polinomial
 cmP3
 ```
+
+Los resultados de las matrices de confusión indican que los modelos polinomiales tuvieron un buen desempeño en la clasificación de los tipos de casas. La matriz de confusión cmP1 muestra que el modelo tuvo una precisión general del 79,12%, con una sensibilidad del 85,80% para la clase 1 (casas), 67,04% para la clase 2 (apartamentos) y 91,57% para la clase 3 (condominios). La matriz de confusión cmP2 muestra que el modelo tuvo una precisión general del 81,44%, con una sensibilidad del 86,14% para la clase 1, 73,97% para la clase 2 y 84,03% para la clase 3. La matriz de confusión cmP3 muestra que el modelo tuvo una precisión general del 82,13%, con una sensibilidad del 86,96% para la clase 1, 74,50% para la clase 2 y 85,12% para la clase 3.
 
 
 
