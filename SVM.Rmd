@@ -333,6 +333,7 @@ fig_3<- fig_3 %>% layout(title="Tiempo de Ejecucion vs Modelo Aplicado",yaxis = 
 fig_3
 ```
 
+Se tarda mas el radial, luego le sigue el polinomial y despues el lineal
 
 ### 10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
 
