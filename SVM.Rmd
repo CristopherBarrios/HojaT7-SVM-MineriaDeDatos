@@ -88,10 +88,14 @@ corrplot(M2,  method = "color", col = col(200), order = "hclust", number.cex = .
          diag = TRUE)
 ```
 
+Se realizó una matriz de correlación entre las variables de los dos conjuntos de datos (frstselect y scndselect) y entre ambos conjuntos. La función corrplot se utilizó para visualizar las matrices de correlación en diferentes colores.
+
 ```{r}
 tipocor<- cor(scndselect[,-1],scndselect$tipoDeCasa)
 tipocor
 ```
+
+Se calculó la correlación entre todas las variables de scndselect y la variable "tipoDeCasa".
 
 ```{r}
 porciento <- 70/100
@@ -122,17 +126,21 @@ modeloSVM_P2<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=5, ker
 modeloSVM_P3<-svm(tipoDeCasa~., data=train,type="C-classification", gamma=2^-5, kernel="polynomial", coef0=1)
 ```
 
+Se dividió el conjunto de datos en dos grupos: un conjunto de entrenamiento (train) y un conjunto de prueba (test). Se crearon varios modelos de SVM con diferentes kernels (lineal, radial y polinómico) y diferentes valores de los parámetros c, gamma y d.
+
 ```{r}
 summary(modeloSVM_L1)
 ```
+Este resumen muestra que el modelo SVM lineal con un costo de 32 tiene 337 vectores de soporte, y que el número de clases es 3. Además, se proporcionan las frecuencias de los vectores de soporte en cada clase.
 
 ```{r}
 summary(modeloSVM_R1)
 ```
-
+El modelo SVM radial con un parámetro gamma de 0.005 y un costo de 1 tiene 641 vectores de soporte, y que el número de clases es 3. También se proporcionan las frecuencias de los vectores de soporte en cada clase.
 ```{r}
 summary(modeloSVM_P1)
 ```
+El modelo SVM polinomial con un parámetro gamma de 1, un coeficiente de término independiente de 1 y un grado de 8 tiene 308 vectores de soporte, y que el número de clases es 3. También se proporcionan las frecuencias de los vectores de soporte en cada clase.
 
 
 5. Use los modelos para predecir el valor de la variable respuesta
