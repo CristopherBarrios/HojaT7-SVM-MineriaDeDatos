@@ -38,6 +38,9 @@ completeFun <- function(data, desiredCols) {
 train <- completeFun(train, "tipoDeCasa") #variable respuesta, variable categorica 
 str(train)
 ```
+
+Las transformaciones realizadas son la eliminación de valores faltantes, la creación de una nueva variable categórica a partir de una variable numérica y la conversión de variables de tipo caracter en variables de tipo factor. Estas transformaciones son necesarias para que los datos sean adecuados para entrenar un modelo de SVM.
+
 3. Use como variable respuesta la variable categórica que especifica si la casa es barata, media o cara
 ```{r}
 train <- completeFun(train, "tipoDeCasa") #variable respuesta, variable categorica 
