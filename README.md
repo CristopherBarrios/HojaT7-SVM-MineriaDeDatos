@@ -8,6 +8,6 @@ Creado por:
 
 [Instrucciones](./HojadeTrabajo7.SVM_2023.pdf)
 
-[PDF - Informe](./SVM.html)
+[HTML - Informe](./SVM.html)
 
 [RMD - Codigo](./SVM.Rmd)

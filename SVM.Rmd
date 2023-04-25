@@ -251,6 +251,8 @@ cmP3
 
 7. Analice si los modelos están sobreajustados o desajustados. ¿Qué puede hacer para manejar el sobreajuste o desajuste?
 
+Básicamente, se sugiere la utilización de la técnica de validación cruzada para evitar el sobreajuste o desajuste en los modelos, lo que permite evaluar los resultados y examinar las independencias en los subconjuntos. En el caso específico de SVM, es posible combatir el subajuste mediante la adición de características de entrenamiento y la optimización de los valores del núcleo para mejorar el ajuste del modelo.
+ 
 8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores).
 ```{r}
 #accuracy
@@ -311,3 +313,13 @@ fig_3
 11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
 
 12. Genere un informe de los resultados y las explicaciones.
+
+Luego de comparar varios modelos de Support Vector Machine, se puede observar que el modelo lineal obtuvo el mayor índice de precisión con un 84%, seguido del modelo radial con un 83.3% y otro modelo radial con un 82.6%. Aunque el modelo con el índice de precisión más bajo aún alcanzó un 74.5%, lo que es considerado un índice de precisión destacable. A pesar de esto, no se puede determinar cuál modelo es el mejor, pero se puede concluir que el modelo lineal fue el que arrojó los mejores resultados, muy similares a los modelos polinomial y radial. Además, este modelo fue el que tuvo el menor tiempo de ejecución, seguido del modelo polinomial y en último lugar el modelo radial. Es decir, el modelo más eficiente fue el que tuvo el menor tiempo de ejecución. En comparación con otros modelos trabajados anteriormente, en esta hoja de trabajo se lograron los índices de precisión más altos. Sin embargo, para determinar el modelo más eficiente se deberían considerar más variables que influyen en el resultado de cada modelo, y esto requeriría más tiempo y conocimiento.
+
+En relación al modelo de clasificación y regresión lineal, se obtuvo una menor tasa de efectividad que con el modelo Naive Bayes y, por último, con el modelo SVM. Las principales diferencias entre cada uno de los modelos están en las matrices de confusión. En el caso del modelo de regresión lineal, se observaron más errores en la precisión de casas caras.
+
+En cuanto al modelo de árbol de clasificación, se obtuvo una menor cantidad de errores en el tipo de casa caro, lo que se reflejó en la gráfica anterior. Sin embargo, el modelo Naive Bayes sigue proporcionando una menor tasa de errores y una mejor aproximación. La principal diferencia entre estos modelos y SVM radica en que el promedio entre los primeros es de 73.44% en comparación con el 84% que proporciona SVM, lo que representa una diferencia de aproximadamente el 10%. Esto indica que SVM proporciona una mayor certeza para este conjunto de datos.
+
+En cuanto a los tiempos de ejecución de cada modelo SVM, se observó que el modelo lineal es el más eficiente, seguido del modelo polinomial y, por último, el modelo radial. Es importante tener en cuenta que si la capacidad de procesamiento de la computadora se ve afectada por otra tarea, esto puede afectar la eficiencia de los diferentes tipos de kernel del modelo y cambiar la gráfica de comparación de tiempos de ejecución de manera considerable.
+
+Al comparar los diferentes modelos de Support Vector Machine (SVM) en esta hoja de trabajo, se puede concluir que el modelo lineal obtuvo los mejores resultados en cuanto a precisión y tiempo de ejecución. Aunque los modelos polinomial y radial también mostraron resultados similares, el lineal fue el más eficiente y preciso. Asimismo, es importante tener en cuenta que la elección del modelo adecuado depende de la naturaleza de los datos y del problema a resolver. Es fundamental tener un conocimiento profundo de cada modelo y de sus variables para determinar cuál es el más adecuado en cada situación.
