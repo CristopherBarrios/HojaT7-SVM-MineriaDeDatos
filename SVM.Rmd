@@ -16,14 +16,14 @@ library(ggplot2)
 ```
 
 
-1. Use los mismos conjuntos de entrenamiento y prueba de las hojas de trabajo pasadas para probar el algoritmo.
+### 1. Use los mismos conjuntos de entrenamiento y prueba de las hojas de trabajo pasadas para probar el algoritmo.
 ```{r}
 set.seed(123)
 train = read.csv("./train.csv")
 ```
 
 
-2. Explore los datos y explique las transformaciones que debe hacerle para generar un modelo de máquinas vectoriales de soporte.
+### 2. Explore los datos y explique las transformaciones que debe hacerle para generar un modelo de máquinas vectoriales de soporte.
 ```{r  message=FALSE, warning=FALSE}
 
 train[is.na(train)] <- 0
@@ -41,7 +41,7 @@ str(train)
 
 Las transformaciones realizadas son la eliminación de valores faltantes, la creación de una nueva variable categórica a partir de una variable numérica y la conversión de variables de tipo caracter en variables de tipo factor. Estas transformaciones son necesarias para que los datos sean adecuados para entrenar un modelo de SVM.
 
-3. Use como variable respuesta la variable categórica que especifica si la casa es barata, media o cara
+### 3. Use como variable respuesta la variable categórica que especifica si la casa es barata, media o cara
 ```{r}
 train <- completeFun(train, "tipoDeCasa") #variable respuesta, variable categorica 
 
@@ -54,7 +54,7 @@ scndselect[is.na(scndselect)] <- 0
 ```
 
 
-4. Genere varios (más de 2) modelos de SVM con diferentes kernels y distintos valores en los parámetros c, gamma (circular) y d (en caso de que utilice el polinomial). Puede tunear el modelo de forma automática siempre que explique los resultados.
+### 4. Genere varios (más de 2) modelos de SVM con diferentes kernels y distintos valores en los parámetros c, gamma (circular) y d (en caso de que utilice el polinomial). Puede tunear el modelo de forma automática siempre que explique los resultados.
 
 ```{r  message=FALSE, warning=FALSE}
 
@@ -143,7 +143,7 @@ summary(modeloSVM_P1)
 El modelo SVM polinomial con un parámetro gamma de 1, un coeficiente de término independiente de 1 y un grado de 8 tiene 308 vectores de soporte, y que el número de clases es 3. También se proporcionan las frecuencias de los vectores de soporte en cada clase.
 
 
-5. Use los modelos para predecir el valor de la variable respuesta
+### 5. Use los modelos para predecir el valor de la variable respuesta
 ```{r}
 # Linear
 process_timeL1 <- proc.time()
@@ -186,7 +186,9 @@ test$tipoDeCasa<- as.factor(test$tipoDeCasa)
 test1$tipoDeCasa<- as.factor(test$tipoDeCasa)
 ```
 
-6. Haga las matrices de confusión respectivas.
+Se ajusta tres tipos de modelos SVM: lineal, radial y polinomial. Luego, cada modelo se utiliza para hacer predicciones en el conjunto de datos de prueba almacenado en la variable test utilizando la función predict. Los resultados de cada modelo se almacenan en variables distintas
+
+### 6. Haga las matrices de confusión respectivas.
 ```{r}
 #linear
 cmL1<-confusionMatrix(test$tipoDeCasa,prediccionL1)
@@ -260,11 +262,11 @@ cmP3
 
 
 
-7. Analice si los modelos están sobreajustados o desajustados. ¿Qué puede hacer para manejar el sobreajuste o desajuste?
+### 7. Analice si los modelos están sobreajustados o desajustados. ¿Qué puede hacer para manejar el sobreajuste o desajuste?
 
 Básicamente, se sugiere la utilización de la técnica de validación cruzada para evitar el sobreajuste o desajuste en los modelos, lo que permite evaluar los resultados y examinar las independencias en los subconjuntos. En el caso específico de SVM, es posible combatir el subajuste mediante la adición de características de entrenamiento y la optimización de los valores del núcleo para mejorar el ajuste del modelo.
  
-8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores).
+### 8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores).
 ```{r}
 #accuracy
 cmL1<-cmL1$overall[['Accuracy']]*100
@@ -299,7 +301,7 @@ fig
 ```
 
 
-9. Compare la eficiencia del mejor modelo de SVM con los resultados obtenidos en los algoritmos de las hojas de trabajo anteriores que usen la misma variable respuesta (árbol de decisión y random forest, naive bayes). ¿Cuál es mejor para predecir? ¿Cuál se demoró más en procesar?
+### 9. Compare la eficiencia del mejor modelo de SVM con los resultados obtenidos en los algoritmos de las hojas de trabajo anteriores que usen la misma variable respuesta (árbol de decisión y random forest, naive bayes). ¿Cuál es mejor para predecir? ¿Cuál se demoró más en procesar?
 ```{r}
 modelos_aplicados <- c("Arbol de Clasificacion","Naive Bayes","Regresion Lineal", "SVM")
 accuracy_individual <- c(73.61, 76.69, 70.05, 83.99)
@@ -319,11 +321,11 @@ fig_3
 ```
 
 
-10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
+### 10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
 
-11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
+### 11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
 
-12. Genere un informe de los resultados y las explicaciones.
+### 12. Genere un informe de los resultados y las explicaciones.
 
 Luego de comparar varios modelos de Support Vector Machine, se puede observar que el modelo lineal obtuvo el mayor índice de precisión con un 84%, seguido del modelo radial con un 83.3% y otro modelo radial con un 82.6%. Aunque el modelo con el índice de precisión más bajo aún alcanzó un 74.5%, lo que es considerado un índice de precisión destacable. A pesar de esto, no se puede determinar cuál modelo es el mejor, pero se puede concluir que el modelo lineal fue el que arrojó los mejores resultados, muy similares a los modelos polinomial y radial. Además, este modelo fue el que tuvo el menor tiempo de ejecución, seguido del modelo polinomial y en último lugar el modelo radial. Es decir, el modelo más eficiente fue el que tuvo el menor tiempo de ejecución. En comparación con otros modelos trabajados anteriormente, en esta hoja de trabajo se lograron los índices de precisión más altos. Sin embargo, para determinar el modelo más eficiente se deberían considerar más variables que influyen en el resultado de cada modelo, y esto requeriría más tiempo y conocimiento.
 
