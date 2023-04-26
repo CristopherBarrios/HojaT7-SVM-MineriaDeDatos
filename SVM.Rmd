@@ -3,8 +3,8 @@ title: "SVM"
 author: "Cristopher Barrios, Carlos Daniel Estrada"
 date: "2023-04-21"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 ```{r message=FALSE, warning=FALSE}
 library(e1071)
@@ -336,7 +336,6 @@ fig_3
 Se tarda mas el radial, luego le sigue el polinomial y despues el lineal
 
 ### 10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
-
 ```{r}
 Modelo <- function(modelo, train, test) {
   # Ajustar el modelo en el conjunto de entrenamiento
@@ -371,12 +370,58 @@ RP2 <- Modelo(modeloSVM_L2, train, test)
 # Evaluar el modelo SVM L3
 RP3 <- Modelo(modeloSVM_L3, train, test)
 ```
+
+```{r}
+train <- read.csv("train.csv")
+test <- read.csv("test.csv")
+
+library(caTools)
+set.seed(123)
+split <- sample.split(train$SalePrice, SplitRatio = 0.8)
+train_data <- subset(train, split == TRUE)
+val_data <- subset(train, split == FALSE)
+
+model <- lm(SalePrice ~ GrLivArea + YearBuilt, data = train_data)
+
+pred <- predict(model, newdata = val_data)
+mse <- mean((val_data$SalePrice - pred)^2)
+
+pred_test <- predict(model, newdata = test)
+submission <- data.frame(Id = test$Id, SalePrice = pred_test)
+write.csv(submission, file = "submission.csv", row.names = FALSE)
+
 ```
 
+```{r}
+summary(model)
+```
+El modelo de regresión lineal ajustado utiliza las variables GrLivArea y YearBuilt para predecir el precio de venta (SalePrice) de una propiedad. Los coeficientes de la regresión muestran que, en promedio, el precio de venta aumenta en $97.70 por cada pie cuadrado adicional de espacio habitable (GrLivArea), y en $1053 por cada año adicional de antigüedad de la propiedad (YearBuilt). El modelo tiene un valor de R cuadrado múltiple de 0.6533, lo que significa que el modelo explica el 65.33% de la variabilidad en los precios de venta. El valor p (p-value) para ambas variables predictoras es menor que 0.05, lo que indica que ambas variables son estadísticamente significativas
 
 ### 11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
 
+resumen del modelo de regresion lineal anterior de la hoja 3 pregunta 8:
 
+
+
+![](./ht31.PNG)
+![](./ht3.PNG)
+
+resumen del modelo de regresion lineal anterior de la hoja 4:
+
+![](./ht41.PNG)
+![](./ht42.PNG)
+
+El modelo de regresión generado anteriormente y el modelo de regresión lineal tienen como variable dependiente a "SalePrice", sin embargo, el modelo generado en la pregunta 10 utiliza como variable independiente "OverallQual" mientras que el modelo de regresión lineal utiliza múltiples variables independientes.
+
+En cuanto a la precisión de los modelos, ambos modelos presentan un alto valor de R-cuadrado ajustado, lo que indica que la mayoría de la variabilidad de los datos es explicada por las variables independientes.
+
+En el modelo de regresión lineal, los coeficientes indican el cambio en la variable dependiente por cada unidad de cambio en la variable independiente correspondiente, mientras que en el modelo generado en la pregunta 10, el coeficiente indica el cambio en la variable dependiente por cada aumento en el nivel de calidad general de la vivienda.
+
+Ambos modelos son útiles para predecir el precio de una vivienda, pero utilizan diferentes variables independientes y la interpretación de los coeficientes es diferente. Por lo tanto, es importante seleccionar cuidadosamente las variables independientes adecuadas para cada modelo y asegurarse de que se interpreten correctamente.
+
+En términos de la bondad de ajuste, el modelo actual parece ajustarse mejor a los datos que el modelo anterior, como se puede ver por el valor más alto del R-cuadrado ajustado y la raíz del error cuadrático medio más baja. Además, el modelo actual utiliza técnicas más avanzadas de regresión, lo que lo hace menos propenso a sobreajustar los datos.
+
+El modelo actual parece ser una mejora con respecto al modelo anterior en términos de precisión y capacidad para generalizar a nuevos datos.
 
 ### 12. Genere un informe de los resultados y las explicaciones.
 
