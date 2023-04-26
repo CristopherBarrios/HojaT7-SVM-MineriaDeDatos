@@ -339,36 +339,32 @@ Se tarda mas el radial, luego le sigue el polinomial y despues el lineal
 
 ```{r}
 Modelo <- function(modelo, train, test) {
-  # Ajustar el modelo en el conjunto de entrenamiento
+  #modelo 
   fit <- modelo
   
-  # Calcular el rendimiento en el conjunto de entrenamiento
+  #Calcular  rendimiento
   predTrain <- predict(fit, train)
   accTrain <- sum(predTrain == train$tipoDeCasa)/nrow(train)
   
-  # Calcular el rendimiento en el conjunto de prueba
+  #rendimiento en el conjunto prueba
   predTest <- predict(fit, test)
   accTest <- sum(predTest == test$tipoDeCasa)/nrow(test)
   
-  # Imprimir los rendimientos
+  #rendimientos
   cat("Accuracy en entrenamiento:", accTrain, "\n")
   cat("Accuracy en prueba:", accTest, "\n")
   
-  # Comparar los rendimientos para determinar si hay sobreajuste
   if(accTrain - accTest > 0.1) {
     cat("El modelo tiene sobreajuste\n")
   } else {
     cat("El modelo no tiene sobreajuste\n")
   }
   
-  # Devolver el modelo ajustado y los rendimientos
   return(list(modelo = fit, trainAcc = accTrain, testAcc = accTest))
 }
-# Evaluar el modelo SVM L1
+# Evaluar el modelo 
 RP1 <- Modelo(modeloSVM_L1, train, test)
-# Evaluar el modelo SVM L2
 RP2 <- Modelo(modeloSVM_L2, train, test)
-# Evaluar el modelo SVM L3
 RP3 <- Modelo(modeloSVM_L3, train, test)
 ```
 ```
