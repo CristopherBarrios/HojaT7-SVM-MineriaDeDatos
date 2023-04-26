@@ -403,13 +403,13 @@ resumen del modelo de regresion lineal anterior de la hoja 3 pregunta 8:
 
 
 
-![](./ht31.PNG)
-![](./ht3.PNG)
+![](./img/ht3.PNG)
+![](./img/ht31.PNG)
 
 resumen del modelo de regresion lineal anterior de la hoja 4:
 
-![](./ht41.PNG)
-![](./ht42.PNG)
+![](./img/ht41.PNG)
+![](./img/ht42.PNG)
 
 El modelo de regresión generado anteriormente y el modelo de regresión lineal tienen como variable dependiente a "SalePrice", sin embargo, el modelo generado en la pregunta 10 utiliza como variable independiente "OverallQual" mientras que el modelo de regresión lineal utiliza múltiples variables independientes.
 
