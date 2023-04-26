@@ -337,7 +337,93 @@ Se tarda mas el radial, luego le sigue el polinomial y despues el lineal
 
 ### 10. Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente.
 
+```{r}
+Modelo <- function(modelo, train, test) {
+  # Ajustar el modelo en el conjunto de entrenamiento
+  fit <- modelo
+  
+  # Calcular el rendimiento en el conjunto de entrenamiento
+  predTrain <- predict(fit, train)
+  accTrain <- sum(predTrain == train$tipoDeCasa)/nrow(train)
+  
+  # Calcular el rendimiento en el conjunto de prueba
+  predTest <- predict(fit, test)
+  accTest <- sum(predTest == test$tipoDeCasa)/nrow(test)
+  
+  # Imprimir los rendimientos
+  cat("Accuracy en entrenamiento:", accTrain, "\n")
+  cat("Accuracy en prueba:", accTest, "\n")
+  
+  # Comparar los rendimientos para determinar si hay sobreajuste
+  if(accTrain - accTest > 0.1) {
+    cat("El modelo tiene sobreajuste\n")
+  } else {
+    cat("El modelo no tiene sobreajuste\n")
+  }
+  
+  # Devolver el modelo ajustado y los rendimientos
+  return(list(modelo = fit, trainAcc = accTrain, testAcc = accTest))
+}
+# Evaluar el modelo SVM L1
+RP1 <- Modelo(modeloSVM_L1, train, test)
+# Evaluar el modelo SVM L2
+RP2 <- Modelo(modeloSVM_L2, train, test)
+# Evaluar el modelo SVM L3
+RP3 <- Modelo(modeloSVM_L3, train, test)
+```
+```
+
+
 ### 11. Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal.
+```{r}
+
+ggplot(data = train[,c("GrLivArea","datos1")], aes(x = GrLivArea, y = datos1)) +
+  geom_point(aes(color = as.factor(datos1)), shape = 1) + 
+  geom_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              color = "pink",
+              se = FALSE) +
+  theme_bw() +
+  labs(title = "Regresion logistica: Casas Caras",
+       y = "Probabilidad default") +
+  theme(legend.position = "none")
+
+```
+
+```{r}
+ggplot(data = train[,c("GrLivArea","datos2")], aes(x = GrLivArea, y = datos2)) +
+  geom_point(aes(color = as.factor(datos2)), shape = 1) + 
+  geom_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              color = "pink",
+              se = FALSE) +
+  theme_bw() +
+  labs(title = "Regresion logistica: Casas Intermedias",
+       y = "Probabilidad default") +
+  theme(legend.position = "none")
+```
+
+```{r}
+```
+
+
+in```{r}
+ggplot(data = train[,c("GrLivArea","datos3")], aes(x = GrLivArea, y = datos3)) +
+```
+
+
+```{r}
+geom_point(aes(color = as.factor(datos3)), shape = 1) + 
+  geom_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              color = "pink",
+              se = FALSE) +
+  theme_bw() +
+  labs(title = "Regresion logistica: Casas Economicas",
+       y = "Probabilidad default") +
+  theme(legend.position = "none")
+```
+
 
 ### 12. Genere un informe de los resultados y las explicaciones.
 
